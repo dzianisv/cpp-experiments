@@ -32,11 +32,6 @@ int main() {
   sigaddset(&mask, SIGHUP);
   sigaddset(&mask, SIGUSR1);
 
-  if (sigprocmask(SIG_BLOCK, &mask, NULL) != 0) {
-    perror("sigprocmask() failed");
-    abort();
-  }
-
   if ((signal_fd = signalfd(-1, &mask, 0)) == -1) {
     perror("signalfd() failed");
     abort();
