@@ -84,6 +84,11 @@ void test_dynamic_typeinfo()
     assert(typeid(io_ref) != typeid(err_t));
 }
 
+template <typename T>
+inline constexpr const T* to_err(const err_t* base) {
+    return dynamic_cast<const T*>(base);
+}
+
 void benchmark_dynamic_cast()
 {
     const io_err_t io_err;
@@ -99,15 +104,15 @@ void benchmark_dynamic_cast()
         {
             const err_t *err_ptr = errors[j];
 
-            if (auto err = dynamic_cast<const http_err_t *>(err_ptr))
+            if (auto err = to_err<http_err_t>(err_ptr))
             {
                 int code = err->code();
             }
-            else if (auto err = dynamic_cast<const io_err_t *>(err_ptr))
+            else if (auto err = to_err<io_err_t>(err_ptr))
             {
                 int code = err->code();
             }
-            else if (auto err = dynamic_cast<const dns_err_t *>(err_ptr))
+            else if (auto err = to_err<dns_err_t>(err_ptr))
             {
                 int code = err->code();
             }
